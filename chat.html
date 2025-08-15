@@ -1,0 +1,507 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="description" content="AccessRide AI Chat Assistant - Get accessible transport recommendations instantly">
+    <title>AI Chat Assistant - AccessRide</title>
+    
+    <!-- Google Fonts -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=Poppins:wght@600;700&display=swap" rel="stylesheet">
+    
+    <!-- Styles -->
+    <link rel="stylesheet" href="styles.css">
+    
+    <!-- Icons -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+</head>
+<body>
+    <!-- Skip Link for Screen Readers -->
+    <a href="#main-content" class="skip-link">Skip to main content</a>
+    
+    <!-- Header -->
+    <header class="header" role="banner">
+        <div class="container">
+            <div class="header-content">
+                <a href="index.html" class="logo" aria-label="AccessRide - Home">
+                    <div class="logo-icon">
+                        <i class="fas fa-wheelchair" aria-hidden="true"></i>
+                    </div>
+                    <span>AccessRide</span>
+                </a>
+                
+                <nav class="nav" role="navigation" aria-label="Main navigation">
+                    <a href="index.html" class="nav-link">Home</a>
+                    <a href="map.html" class="nav-link">Map View</a>
+                    <a href="feedback.html" class="nav-link">Feedback</a>
+                    <a href="profile.html" class="nav-link">Profile</a>
+                </nav>
+            </div>
+        </div>
+    </header>
+
+    <!-- Main Content -->
+    <main id="main-content" role="main" class="py-8">
+        <div class="container">
+            <div class="text-center mb-8">
+                <h1 class="mb-4">AI Chat Assistant</h1>
+                <p style="font-size: var(--text-lg); color: var(--gray-600); max-width: 600px; margin: 0 auto;">
+                    Tell me where you'd like to go and any accessibility needs you have. 
+                    I'll find the best accessible transport options for you!
+                </p>
+            </div>
+
+            <!-- Chat Container -->
+            <div class="chat-container" id="chatContainer">
+                <!-- Chat Header -->
+                <div class="chat-header">
+                    <h2 class="chat-title">
+                        <i class="fas fa-robot" aria-hidden="true"></i>
+                        AccessRide Assistant
+                    </h2>
+                    <div class="chat-status">
+                        <div class="status-indicator" aria-hidden="true"></div>
+                        <span>Online</span>
+                    </div>
+                </div>
+
+                <!-- Chat Messages -->
+                <div class="chat-messages" id="chatMessages" role="log" aria-live="polite" aria-label="Chat conversation">
+                    <!-- Welcome Message -->
+                    <div class="message ai">
+                        <div class="message-avatar">AI</div>
+                        <div class="message-content">
+                            <p>Hello! I'm your AccessRide assistant. I'm here to help you find accessible transport options.</p>
+                            <p>To get started, please tell me:</p>
+                            <ul style="margin: var(--space-3) 0; padding-left: var(--space-4);">
+                                <li>Where would you like to go?</li>
+                                <li>Do you have any specific accessibility needs?</li>
+                                <li>What's your preferred time of travel?</li>
+                            </ul>
+                            <p>You can also try one of these quick options:</p>
+                            <div style="display: flex; flex-wrap: wrap; gap: var(--space-2); margin-top: var(--space-4);">
+                                <button class="btn btn-sm btn-outline quick-option" data-message="I need wheelchair accessible transport to downtown">
+                                    Downtown (Wheelchair)
+                                </button>
+                                <button class="btn btn-sm btn-outline quick-option" data-message="Find accessible routes to the airport">
+                                    Airport Access
+                                </button>
+                                <button class="btn btn-sm btn-outline quick-option" data-message="I need transport with step-free access to the hospital">
+                                    Hospital (Step-free)
+                                </button>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Chat Input -->
+                <div style="padding: var(--space-4); border-top: 1px solid var(--gray-200); background-color: var(--white);">
+                    <form id="chatForm" class="flex gap-4">
+                        <label for="messageInput" class="sr-only">Type your message</label>
+                        <input 
+                            type="text" 
+                            id="messageInput" 
+                            class="form-input" 
+                            placeholder="Type your message here..."
+                            style="margin-bottom: 0;"
+                            autocomplete="off"
+                            required
+                        >
+                        <button type="submit" class="btn btn-primary" aria-label="Send message">
+                            <i class="fas fa-paper-plane" aria-hidden="true"></i>
+                        </button>
+                    </form>
+                    
+                    <!-- Voice Input Button -->
+                    <div class="text-center mt-4">
+                        <button id="voiceButton" class="btn btn-secondary btn-sm" aria-label="Start voice input">
+                            <i class="fas fa-microphone" aria-hidden="true"></i>
+                            Speak Your Request
+                        </button>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Example Response Cards (Hidden by default, shown by JavaScript) -->
+            <div id="responseTemplates" style="display: none;">
+                <!-- Route Suggestion Card Template -->
+                <div class="response-card route-card">
+                    <div class="route-header">
+                        <div class="route-icon">
+                            <i class="fas fa-route" aria-hidden="true"></i>
+                        </div>
+                        <div>
+                            <h3 style="margin: 0; color: var(--gray-900);">Recommended Route</h3>
+                            <p style="margin: 0; color: var(--gray-600); font-size: var(--text-sm);">Best accessible option found</p>
+                        </div>
+                    </div>
+                    
+                    <div class="route-details">
+                        <div class="route-detail">
+                            <div class="route-detail-label">Duration</div>
+                            <div class="route-detail-value">45 min</div>
+                        </div>
+                        <div class="route-detail">
+                            <div class="route-detail-label">Transfers</div>
+                            <div class="route-detail-value">2</div>
+                        </div>
+                        <div class="route-detail">
+                            <div class="route-detail-label">Fare</div>
+                            <div class="route-detail-value">$3.50</div>
+                        </div>
+                        <div class="route-detail">
+                            <div class="route-detail-label">Accessibility</div>
+                            <div class="route-detail-value">
+                                <i class="fas fa-wheelchair" style="color: var(--success);" aria-hidden="true"></i>
+                                Full
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <div style="background-color: var(--gray-50); padding: var(--space-4); border-radius: var(--radius-lg); margin: var(--space-4) 0;">
+                        <h4 style="margin-bottom: var(--space-3); font-size: var(--text-base);">Route Steps:</h4>
+                        <ol style="margin: 0; padding-left: var(--space-5);">
+                            <li style="margin-bottom: var(--space-2);">Walk 3 min to Central Station (wheelchair accessible entrance)</li>
+                            <li style="margin-bottom: var(--space-2);">Take Blue Line to Downtown Hub (12 min) - elevator available</li>
+                            <li style="margin-bottom: var(--space-2);">Transfer to Red Line platform via accessible walkway</li>
+                            <li style="margin-bottom: var(--space-2);">Take Red Line to Market Street (25 min)</li>
+                            <li>Walk 5 min to destination (level path, curb cuts available)</li>
+                        </ol>
+                    </div>
+                    
+                    <div class="card-footer">
+                        <div class="flex gap-4">
+                            <button class="btn btn-primary">
+                                <i class="fas fa-navigation" aria-hidden="true"></i>
+                                Start Navigation
+                            </button>
+                            <button class="btn btn-outline">
+                                <i class="fas fa-bookmark" aria-hidden="true"></i>
+                                Save Route
+                            </button>
+                            <button class="btn btn-ghost">
+                                <i class="fas fa-share" aria-hidden="true"></i>
+                                Share
+                            </button>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Cab Booking Card Template -->
+                <div class="response-card cab-card">
+                    <div class="route-header">
+                        <div style="background-color: var(--accent-yellow); width: 32px; height: 32px; border-radius: var(--radius-md); display: flex; align-items: center; justify-content: center; color: var(--gray-900);">
+                            <i class="fas fa-taxi" aria-hidden="true"></i>
+                        </div>
+                        <div>
+                            <h3 style="margin: 0; color: var(--gray-900);">No Accessible Public Transit Found</h3>
+                            <p style="margin: 0; color: var(--gray-600); font-size: var(--text-sm);">Here are accessible ride options:</p>
+                        </div>
+                    </div>
+                    
+                    <div class="cab-options">
+                        <div class="cab-option">
+                            <div class="cab-info">
+                                <div class="cab-logo" style="background-color: #000; color: white; display: flex; align-items: center; justify-content: center; font-weight: bold;">U</div>
+                                <div>
+                                    <div style="font-weight: var(--font-semibold);">Uber WAV</div>
+                                    <div style="font-size: var(--text-sm); color: var(--gray-600);">Wheelchair accessible • 8 min</div>
+                                </div>
+                            </div>
+                            <div style="text-align: right;">
+                                <div style="font-weight: var(--font-semibold); color: var(--gray-900);">$18.50</div>
+                                <button class="btn btn-accent btn-sm">Book Now</button>
+                            </div>
+                        </div>
+                        
+                        <div class="cab-option">
+                            <div class="cab-info">
+                                <div class="cab-logo" style="background-color: #32CD32; color: white; display: flex; align-items: center; justify-content: center; font-weight: bold;">L</div>
+                                <div>
+                                    <div style="font-weight: var(--font-semibold);">Lyft Access</div>
+                                    <div style="font-size: var(--text-sm); color: var(--gray-600);">Wheelchair accessible • 12 min</div>
+                                </div>
+                            </div>
+                            <div style="text-align: right;">
+                                <div style="font-weight: var(--font-semibold); color: var(--gray-900);">$16.75</div>
+                                <button class="btn btn-secondary btn-sm">Book Now</button>
+                            </div>
+                        </div>
+                        
+                        <div class="cab-option">
+                            <div class="cab-info">
+                                <div class="cab-logo" style="background-color: var(--primary-blue); color: white; display: flex; align-items: center; justify-content: center; font-weight: bold;">
+                                    <i class="fas fa-taxi" aria-hidden="true"></i>
+                                </div>
+                                <div>
+                                    <div style="font-weight: var(--font-semibold);">Local Accessible Taxi</div>
+                                    <div style="font-size: var(--text-sm); color: var(--gray-600);">Call dispatch • ~15 min</div>
+                                </div>
+                            </div>
+                            <div style="text-align: right;">
+                                <div style="font-weight: var(--font-semibold); color: var(--gray-900);">$14.00</div>
+                                <button class="btn btn-outline btn-sm">Call (555) 123-4567</button>
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <div style="background-color: var(--info); color: white; padding: var(--space-3); border-radius: var(--radius-lg); margin-top: var(--space-4);">
+                        <p style="margin: 0; font-size: var(--text-sm);">
+                            <i class="fas fa-info-circle" aria-hidden="true"></i>
+                            All vehicles are wheelchair accessible and equipped with proper restraint systems.
+                        </p>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </main>
+
+    <!-- Footer -->
+    <footer class="footer" role="contentinfo">
+        <div class="container">
+            <div class="footer-content">
+                <div class="footer-section">
+                    <h3>AccessRide</h3>
+                    <p style="color: var(--gray-400);">
+                        Making accessible transport easier for everyone.
+                    </p>
+                </div>
+                
+                <div class="footer-section">
+                    <h3>Quick Links</h3>
+                    <ul class="footer-links">
+                        <li><a href="index.html">Home</a></li>
+                        <li><a href="map.html">Map View</a></li>
+                        <li><a href="feedback.html">Feedback</a></li>
+                        <li><a href="profile.html">Profile</a></li>
+                    </ul>
+                </div>
+            </div>
+            
+            <div class="footer-bottom">
+                <p>&copy; 2024 AccessRide. All rights reserved.</p>
+            </div>
+        </div>
+    </footer>
+
+    <!-- JavaScript for Chat Functionality -->
+    <script>
+        class AccessRideChat {
+            constructor() {
+                this.chatMessages = document.getElementById('chatMessages');
+                this.chatForm = document.getElementById('chatForm');
+                this.messageInput = document.getElementById('messageInput');
+                this.voiceButton = document.getElementById('voiceButton');
+                
+                this.init();
+            }
+            
+            init() {
+                // Bind events
+                this.chatForm.addEventListener('submit', (e) => this.handleSubmit(e));
+                this.voiceButton.addEventListener('click', () => this.handleVoiceInput());
+                
+                // Quick option buttons
+                document.querySelectorAll('.quick-option').forEach(button => {
+                    button.addEventListener('click', (e) => {
+                        const message = e.target.dataset.message;
+                        this.addUserMessage(message);
+                        this.processMessage(message);
+                    });
+                });
+                
+                // Auto-focus input
+                this.messageInput.focus();
+            }
+            
+            handleSubmit(e) {
+                e.preventDefault();
+                const message = this.messageInput.value.trim();
+                
+                if (message) {
+                    this.addUserMessage(message);
+                    this.processMessage(message);
+                    this.messageInput.value = '';
+                    this.messageInput.focus();
+                }
+            }
+            
+            addUserMessage(message) {
+                const messageDiv = document.createElement('div');
+                messageDiv.className = 'message user';
+                messageDiv.innerHTML = `
+                    <div class="message-avatar">You</div>
+                    <div class="message-content">
+                        <p>${this.escapeHtml(message)}</p>
+                    </div>
+                `;
+                
+                this.chatMessages.appendChild(messageDiv);
+                this.scrollToBottom();
+            }
+            
+            addAIMessage(content) {
+                const messageDiv = document.createElement('div');
+                messageDiv.className = 'message ai animate-slide-in';
+                messageDiv.innerHTML = `
+                    <div class="message-avatar">AI</div>
+                    <div class="message-content">
+                        ${content}
+                    </div>
+                `;
+                
+                this.chatMessages.appendChild(messageDiv);
+                this.scrollToBottom();
+            }
+            
+            processMessage(message) {
+                // Show typing indicator
+                this.showTypingIndicator();
+                
+                // Simulate AI processing delay
+                setTimeout(() => {
+                    this.hideTypingIndicator();
+                    this.generateResponse(message);
+                }, 1500);
+            }
+            
+            generateResponse(message) {
+                const lowerMessage = message.toLowerCase();
+                
+                if (lowerMessage.includes('downtown') || lowerMessage.includes('wheelchair')) {
+                    this.showRouteResponse();
+                } else if (lowerMessage.includes('airport') || lowerMessage.includes('no public transit')) {
+                    this.showCabResponse();
+                } else if (lowerMessage.includes('hospital') || lowerMessage.includes('step-free')) {
+                    this.showRouteResponse();
+                } else {
+                    this.showGenericResponse(message);
+                }
+            }
+            
+            showRouteResponse() {
+                const routeCard = document.querySelector('.route-card').cloneNode(true);
+                this.addAIMessage(`
+                    <p>Great! I found an accessible route for you. Here's the best option:</p>
+                    ${routeCard.outerHTML}
+                    <p>This route has been verified for full wheelchair accessibility. Would you like me to check for alternative routes or help with anything else?</p>
+                `);
+            }
+            
+            showCabResponse() {
+                const cabCard = document.querySelector('.cab-card').cloneNode(true);
+                this.addAIMessage(`
+                    <p>I checked public transit options but couldn't find fully accessible routes for your journey. Here are accessible ride-sharing options:</p>
+                    ${cabCard.outerHTML}
+                    <p>Would you like me to help you book one of these rides or look for other alternatives?</p>
+                `);
+            }
+            
+            showGenericResponse(message) {
+                this.addAIMessage(`
+                    <p>Thanks for your message! To help you find the best accessible transport options, I need a bit more information:</p>
+                    <ul style="margin: var(--space-3) 0; padding-left: var(--space-4);">
+                        <li>What's your destination?</li>
+                        <li>Do you need wheelchair accessible transport?</li>
+                        <li>Any other accessibility requirements?</li>
+                    </ul>
+                    <p>You can also try asking me something like "I need wheelchair accessible transport to downtown" or use one of the quick options above!</p>
+                `);
+            }
+            
+            showTypingIndicator() {
+                const typingDiv = document.createElement('div');
+                typingDiv.className = 'message ai typing-indicator';
+                typingDiv.innerHTML = `
+                    <div class="message-avatar">AI</div>
+                    <div class="message-content">
+                        <div style="display: flex; gap: 4px; align-items: center;">
+                            <div style="width: 8px; height: 8px; background-color: var(--gray-400); border-radius: 50%; animation: pulse 1.5s infinite;"></div>
+                            <div style="width: 8px; height: 8px; background-color: var(--gray-400); border-radius: 50%; animation: pulse 1.5s infinite 0.2s;"></div>
+                            <div style="width: 8px; height: 8px; background-color: var(--gray-400); border-radius: 50%; animation: pulse 1.5s infinite 0.4s;"></div>
+                            <span style="margin-left: var(--space-2); color: var(--gray-600); font-size: var(--text-sm);">AI is thinking...</span>
+                        </div>
+                    </div>
+                `;
+                
+                this.chatMessages.appendChild(typingDiv);
+                this.scrollToBottom();
+            }
+            
+            hideTypingIndicator() {
+                const typingIndicator = this.chatMessages.querySelector('.typing-indicator');
+                if (typingIndicator) {
+                    typingIndicator.remove();
+                }
+            }
+            
+            handleVoiceInput() {
+                if ('speechRecognition' in window || 'webkitSpeechRecognition' in window) {
+                    const SpeechRecognition = window.speechRecognition || window.webkitSpeechRecognition;
+                    const recognition = new SpeechRecognition();
+                    
+                    recognition.continuous = false;
+                    recognition.interimResults = false;
+                    recognition.lang = 'en-US';
+                    
+                    this.voiceButton.innerHTML = '<i class="fas fa-microphone-slash"></i> Listening...';
+                    this.voiceButton.disabled = true;
+                    
+                    recognition.onresult = (event) => {
+                        const transcript = event.results[0][0].transcript;
+                        this.messageInput.value = transcript;
+                        this.addUserMessage(transcript);
+                        this.processMessage(transcript);
+                        this.messageInput.value = '';
+                    };
+                    
+                    recognition.onerror = () => {
+                        alert('Voice recognition error. Please try typing your message instead.');
+                    };
+                    
+                    recognition.onend = () => {
+                        this.voiceButton.innerHTML = '<i class="fas fa-microphone"></i> Speak Your Request';
+                        this.voiceButton.disabled = false;
+                    };
+                    
+                    recognition.start();
+                } else {
+                    alert('Voice recognition is not supported in your browser. Please type your message instead.');
+                }
+            }
+            
+            scrollToBottom() {
+                this.chatMessages.scrollTop = this.chatMessages.scrollHeight;
+            }
+            
+            escapeHtml(text) {
+                const div = document.createElement('div');
+                div.textContent = text;
+                return div.innerHTML;
+            }
+        }
+        
+        // Initialize chat when page loads
+        document.addEventListener('DOMContentLoaded', () => {
+            new AccessRideChat();
+        });
+        
+        // Keyboard shortcuts
+        document.addEventListener('keydown', (e) => {
+            // Alt + M to focus message input
+            if (e.altKey && e.key === 'm') {
+                e.preventDefault();
+                document.getElementById('messageInput').focus();
+            }
+            
+            // Alt + V for voice input
+            if (e.altKey && e.key === 'v') {
+                e.preventDefault();
+                document.getElementById('voiceButton').click();
+            }
+        });
+    </script>
+</body>
+</html>
