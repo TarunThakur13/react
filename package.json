@@ -1,0 +1,17 @@
+{
+  "name": "accessride",
+  "version": "1.0.0",
+  "description": "AI Accessible Transport Finder - A web app for wheelchair users and mobility-challenged individuals",
+  "main": "index.html",
+  "scripts": {
+    "dev": "live-server --port=3000",
+    "build": "echo 'Build process for static files'",
+    "start": "live-server --port=3000"
+  },
+  "keywords": ["accessibility", "transport", "ai", "wheelchair", "mobility", "hackathon"],
+  "author": "AccessRide Team",
+  "license": "MIT",
+  "devDependencies": {
+    "live-server": "^1.2.2"
+  }
+}

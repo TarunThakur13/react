@@ -1,0 +1,886 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="description" content="AccessRide Feedback - Share your experience and help us improve accessibility">
+    <title>Feedback & Reviews - AccessRide</title>
+    
+    <!-- Google Fonts -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=Poppins:wght@600;700&display=swap" rel="stylesheet">
+    
+    <!-- Styles -->
+    <link rel="stylesheet" href="styles.css">
+    
+    <!-- Icons -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    
+    <style>
+        .feedback-hero {
+            background: linear-gradient(135deg, var(--primary-green) 0%, var(--primary-blue) 100%);
+            color: var(--white);
+            padding: var(--space-12) 0;
+            text-align: center;
+        }
+        
+        .feedback-form-section {
+            padding: var(--space-16) 0;
+        }
+        
+        .rating-container {
+            background-color: var(--white);
+            border-radius: var(--radius-2xl);
+            padding: var(--space-8);
+            box-shadow: var(--shadow-xl);
+            margin-bottom: var(--space-8);
+        }
+        
+        .rating-category {
+            margin-bottom: var(--space-8);
+            padding-bottom: var(--space-6);
+            border-bottom: 1px solid var(--gray-200);
+        }
+        
+        .rating-category:last-child {
+            border-bottom: none;
+            margin-bottom: 0;
+        }
+        
+        .rating-header {
+            display: flex;
+            align-items: center;
+            gap: var(--space-3);
+            margin-bottom: var(--space-4);
+        }
+        
+        .rating-icon {
+            width: 40px;
+            height: 40px;
+            border-radius: var(--radius-lg);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: var(--white);
+            font-size: var(--text-lg);
+        }
+        
+        .rating-title {
+            font-size: var(--text-xl);
+            font-weight: var(--font-semibold);
+            color: var(--gray-900);
+            margin: 0;
+        }
+        
+        .rating-description {
+            color: var(--gray-600);
+            font-size: var(--text-sm);
+            margin: 0;
+        }
+        
+        .rating-stars {
+            display: flex;
+            gap: var(--space-3);
+            align-items: center;
+            margin-bottom: var(--space-4);
+        }
+        
+        .star-button {
+            background: none;
+            border: none;
+            cursor: pointer;
+            font-size: 2rem;
+            color: var(--gray-300);
+            transition: all var(--transition-fast);
+            padding: var(--space-2);
+            border-radius: var(--radius-md);
+            position: relative;
+        }
+        
+        .star-button:hover,
+        .star-button:focus {
+            color: var(--accent-yellow);
+            transform: scale(1.1);
+            outline: 2px solid var(--accent-yellow);
+            outline-offset: 2px;
+        }
+        
+        .star-button.active {
+            color: var(--accent-yellow);
+        }
+        
+        .rating-text {
+            margin-left: var(--space-4);
+            font-weight: var(--font-semibold);
+            color: var(--gray-700);
+        }
+        
+        .reviews-section {
+            background-color: var(--gray-50);
+            padding: var(--space-16) 0;
+        }
+        
+        .review-card {
+            background-color: var(--white);
+            border-radius: var(--radius-xl);
+            padding: var(--space-6);
+            margin-bottom: var(--space-6);
+            box-shadow: var(--shadow-md);
+            border-left: 4px solid var(--primary-blue);
+        }
+        
+        .review-header {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            margin-bottom: var(--space-4);
+        }
+        
+        .reviewer-info {
+            display: flex;
+            align-items: center;
+            gap: var(--space-3);
+        }
+        
+        .reviewer-avatar {
+            width: 48px;
+            height: 48px;
+            border-radius: var(--radius-full);
+            background: linear-gradient(135deg, var(--primary-blue), var(--primary-green));
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: var(--white);
+            font-weight: var(--font-bold);
+            font-size: var(--text-lg);
+        }
+        
+        .reviewer-details h4 {
+            margin: 0;
+            font-size: var(--text-base);
+            color: var(--gray-900);
+        }
+        
+        .reviewer-details p {
+            margin: 0;
+            font-size: var(--text-sm);
+            color: var(--gray-600);
+        }
+        
+        .review-rating {
+            display: flex;
+            gap: var(--space-1);
+        }
+        
+        .review-star {
+            color: var(--accent-yellow);
+            font-size: var(--text-sm);
+        }
+        
+        .quick-feedback {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+            gap: var(--space-4);
+            margin-bottom: var(--space-8);
+        }
+        
+        .quick-feedback-item {
+            background-color: var(--white);
+            border: 2px solid var(--gray-200);
+            border-radius: var(--radius-xl);
+            padding: var(--space-6);
+            text-align: center;
+            cursor: pointer;
+            transition: all var(--transition-fast);
+        }
+        
+        .quick-feedback-item:hover {
+            border-color: var(--primary-blue);
+            box-shadow: var(--shadow-md);
+        }
+        
+        .quick-feedback-item.selected {
+            border-color: var(--primary-blue);
+            background-color: rgba(0, 102, 204, 0.05);
+        }
+        
+        .quick-feedback-icon {
+            font-size: 2.5rem;
+            margin-bottom: var(--space-3);
+        }
+        
+        .quick-feedback-title {
+            font-size: var(--text-lg);
+            font-weight: var(--font-semibold);
+            margin-bottom: var(--space-2);
+            color: var(--gray-900);
+        }
+        
+        .quick-feedback-desc {
+            font-size: var(--text-sm);
+            color: var(--gray-600);
+            margin: 0;
+        }
+        
+        .form-section {
+            background-color: var(--white);
+            border-radius: var(--radius-2xl);
+            padding: var(--space-8);
+            box-shadow: var(--shadow-lg);
+        }
+        
+        .char-counter {
+            text-align: right;
+            font-size: var(--text-sm);
+            color: var(--gray-500);
+            margin-top: var(--space-2);
+        }
+        
+        .char-counter.warning {
+            color: var(--warning);
+        }
+        
+        .char-counter.error {
+            color: var(--error);
+        }
+        
+        .success-message {
+            background-color: var(--success);
+            color: var(--white);
+            padding: var(--space-6);
+            border-radius: var(--radius-lg);
+            text-align: center;
+            margin-bottom: var(--space-6);
+            display: none;
+        }
+        
+        .success-message.show {
+            display: block;
+            animation: slideIn 0.5s ease-out;
+        }
+    </style>
+</head>
+<body>
+    <!-- Skip Link for Screen Readers -->
+    <a href="#main-content" class="skip-link">Skip to main content</a>
+    
+    <!-- Header -->
+    <header class="header" role="banner">
+        <div class="container">
+            <div class="header-content">
+                <a href="index.html" class="logo" aria-label="AccessRide - Home">
+                    <div class="logo-icon">
+                        <i class="fas fa-wheelchair" aria-hidden="true"></i>
+                    </div>
+                    <span>AccessRide</span>
+                </a>
+                
+                <nav class="nav" role="navigation" aria-label="Main navigation">
+                    <a href="index.html" class="nav-link">Home</a>
+                    <a href="map.html" class="nav-link">Map View</a>
+                    <a href="feedback.html" class="nav-link active" aria-current="page">Feedback</a>
+                    <a href="profile.html" class="nav-link">Profile</a>
+                </nav>
+            </div>
+        </div>
+    </header>
+
+    <!-- Main Content -->
+    <main id="main-content" role="main">
+        <!-- Hero Section -->
+        <section class="feedback-hero" role="banner">
+            <div class="container">
+                <h1 class="mb-4">Your Voice Matters</h1>
+                <p style="font-size: var(--text-xl); max-width: 700px; margin: 0 auto;">
+                    Help us improve AccessRide by sharing your experience. Your feedback makes our platform more accessible for everyone.
+                </p>
+            </div>
+        </section>
+
+        <!-- Quick Feedback Section -->
+        <section class="feedback-form-section" aria-labelledby="quick-feedback-heading">
+            <div class="container">
+                <h2 id="quick-feedback-heading" class="text-center mb-8">How was your experience today?</h2>
+                
+                <div class="quick-feedback">
+                    <div class="quick-feedback-item" data-type="excellent" onclick="selectQuickFeedback(this)">
+                        <div class="quick-feedback-icon" style="color: var(--success);">
+                            <i class="fas fa-smile-beam" aria-hidden="true"></i>
+                        </div>
+                        <h3 class="quick-feedback-title">Excellent</h3>
+                        <p class="quick-feedback-desc">Everything worked perfectly and exceeded expectations</p>
+                    </div>
+                    
+                    <div class="quick-feedback-item" data-type="good" onclick="selectQuickFeedback(this)">
+                        <div class="quick-feedback-icon" style="color: var(--primary-green);">
+                            <i class="fas fa-smile" aria-hidden="true"></i>
+                        </div>
+                        <h3 class="quick-feedback-title">Good</h3>
+                        <p class="quick-feedback-desc">Mostly positive experience with minor issues</p>
+                    </div>
+                    
+                    <div class="quick-feedback-item" data-type="average" onclick="selectQuickFeedback(this)">
+                        <div class="quick-feedback-icon" style="color: var(--warning);">
+                            <i class="fas fa-meh" aria-hidden="true"></i>
+                        </div>
+                        <h3 class="quick-feedback-title">Average</h3>
+                        <p class="quick-feedback-desc">Okay experience but room for improvement</p>
+                    </div>
+                    
+                    <div class="quick-feedback-item" data-type="poor" onclick="selectQuickFeedback(this)">
+                        <div class="quick-feedback-icon" style="color: var(--error);">
+                            <i class="fas fa-frown" aria-hidden="true"></i>
+                        </div>
+                        <h3 class="quick-feedback-title">Needs Work</h3>
+                        <p class="quick-feedback-desc">Several issues that need attention</p>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- Detailed Rating Section -->
+        <section class="py-8" aria-labelledby="detailed-rating-heading">
+            <div class="container">
+                <h2 id="detailed-rating-heading" class="text-center mb-8">Rate Different Aspects</h2>
+                
+                <div class="rating-container">
+                    <!-- Overall Experience -->
+                    <div class="rating-category">
+                        <div class="rating-header">
+                            <div class="rating-icon" style="background-color: var(--primary-blue);">
+                                <i class="fas fa-heart" aria-hidden="true"></i>
+                            </div>
+                            <div>
+                                <h3 class="rating-title">Overall Experience</h3>
+                                <p class="rating-description">How would you rate your overall experience with AccessRide?</p>
+                            </div>
+                        </div>
+                        <div class="rating-stars">
+                            <div class="star-rating" data-category="overall">
+                                <button class="star-button" data-value="1" aria-label="1 star" onclick="setRating('overall', 1)">
+                                    <i class="fas fa-star"></i>
+                                </button>
+                                <button class="star-button" data-value="2" aria-label="2 stars" onclick="setRating('overall', 2)">
+                                    <i class="fas fa-star"></i>
+                                </button>
+                                <button class="star-button" data-value="3" aria-label="3 stars" onclick="setRating('overall', 3)">
+                                    <i class="fas fa-star"></i>
+                                </button>
+                                <button class="star-button" data-value="4" aria-label="4 stars" onclick="setRating('overall', 4)">
+                                    <i class="fas fa-star"></i>
+                                </button>
+                                <button class="star-button" data-value="5" aria-label="5 stars" onclick="setRating('overall', 5)">
+                                    <i class="fas fa-star"></i>
+                                </button>
+                            </div>
+                            <span class="rating-text" id="overall-text">Click to rate</span>
+                        </div>
+                    </div>
+
+                    <!-- Accessibility Features -->
+                    <div class="rating-category">
+                        <div class="rating-header">
+                            <div class="rating-icon" style="background-color: var(--primary-green);">
+                                <i class="fas fa-universal-access" aria-hidden="true"></i>
+                            </div>
+                            <div>
+                                <h3 class="rating-title">Accessibility Features</h3>
+                                <p class="rating-description">How well did our accessibility features meet your needs?</p>
+                            </div>
+                        </div>
+                        <div class="rating-stars">
+                            <div class="star-rating" data-category="accessibility">
+                                <button class="star-button" data-value="1" aria-label="1 star" onclick="setRating('accessibility', 1)">
+                                    <i class="fas fa-star"></i>
+                                </button>
+                                <button class="star-button" data-value="2" aria-label="2 stars" onclick="setRating('accessibility', 2)">
+                                    <i class="fas fa-star"></i>
+                                </button>
+                                <button class="star-button" data-value="3" aria-label="3 stars" onclick="setRating('accessibility', 3)">
+                                    <i class="fas fa-star"></i>
+                                </button>
+                                <button class="star-button" data-value="4" aria-label="4 stars" onclick="setRating('accessibility', 4)">
+                                    <i class="fas fa-star"></i>
+                                </button>
+                                <button class="star-button" data-value="5" aria-label="5 stars" onclick="setRating('accessibility', 5)">
+                                    <i class="fas fa-star"></i>
+                                </button>
+                            </div>
+                            <span class="rating-text" id="accessibility-text">Click to rate</span>
+                        </div>
+                    </div>
+
+                    <!-- AI Assistant -->
+                    <div class="rating-category">
+                        <div class="rating-header">
+                            <div class="rating-icon" style="background-color: var(--accent-yellow); color: var(--gray-900);">
+                                <i class="fas fa-robot" aria-hidden="true"></i>
+                            </div>
+                            <div>
+                                <h3 class="rating-title">AI Assistant</h3>
+                                <p class="rating-description">How helpful was our AI chat assistant?</p>
+                            </div>
+                        </div>
+                        <div class="rating-stars">
+                            <div class="star-rating" data-category="ai">
+                                <button class="star-button" data-value="1" aria-label="1 star" onclick="setRating('ai', 1)">
+                                    <i class="fas fa-star"></i>
+                                </button>
+                                <button class="star-button" data-value="2" aria-label="2 stars" onclick="setRating('ai', 2)">
+                                    <i class="fas fa-star"></i>
+                                </button>
+                                <button class="star-button" data-value="3" aria-label="3 stars" onclick="setRating('ai', 3)">
+                                    <i class="fas fa-star"></i>
+                                </button>
+                                <button class="star-button" data-value="4" aria-label="4 stars" onclick="setRating('ai', 4)">
+                                    <i class="fas fa-star"></i>
+                                </button>
+                                <button class="star-button" data-value="5" aria-label="5 stars" onclick="setRating('ai', 5)">
+                                    <i class="fas fa-star"></i>
+                                </button>
+                            </div>
+                            <span class="rating-text" id="ai-text">Click to rate</span>
+                        </div>
+                    </div>
+
+                    <!-- Route Information -->
+                    <div class="rating-category">
+                        <div class="rating-header">
+                            <div class="rating-icon" style="background-color: var(--accent-orange);">
+                                <i class="fas fa-route" aria-hidden="true"></i>
+                            </div>
+                            <div>
+                                <h3 class="rating-title">Route Information</h3>
+                                <p class="rating-description">How accurate and helpful was the route information?</p>
+                            </div>
+                        </div>
+                        <div class="rating-stars">
+                            <div class="star-rating" data-category="routes">
+                                <button class="star-button" data-value="1" aria-label="1 star" onclick="setRating('routes', 1)">
+                                    <i class="fas fa-star"></i>
+                                </button>
+                                <button class="star-button" data-value="2" aria-label="2 stars" onclick="setRating('routes', 2)">
+                                    <i class="fas fa-star"></i>
+                                </button>
+                                <button class="star-button" data-value="3" aria-label="3 stars" onclick="setRating('routes', 3)">
+                                    <i class="fas fa-star"></i>
+                                </button>
+                                <button class="star-button" data-value="4" aria-label="4 stars" onclick="setRating('routes', 4)">
+                                    <i class="fas fa-star"></i>
+                                </button>
+                                <button class="star-button" data-value="5" aria-label="5 stars" onclick="setRating('routes', 5)">
+                                    <i class="fas fa-star"></i>
+                                </button>
+                            </div>
+                            <span class="rating-text" id="routes-text">Click to rate</span>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- Detailed Feedback Form -->
+        <section class="py-8" aria-labelledby="detailed-feedback-heading">
+            <div class="container">
+                <div class="form-section">
+                    <h2 id="detailed-feedback-heading" class="text-center mb-8">Tell Us More</h2>
+                    
+                    <div id="successMessage" class="success-message">
+                        <h3 style="margin: 0 0 var(--space-2) 0;">
+                            <i class="fas fa-check-circle" aria-hidden="true"></i>
+                            Thank You for Your Feedback!
+                        </h3>
+                        <p style="margin: 0;">Your input helps us make AccessRide better for everyone.</p>
+                    </div>
+
+                    <form id="feedbackForm" novalidate>
+                        <div class="grid grid-cols-2 gap-6">
+                            <div class="form-group">
+                                <label for="firstName" class="form-label">First Name</label>
+                                <input type="text" id="firstName" name="firstName" class="form-input" required>
+                            </div>
+                            
+                            <div class="form-group">
+                                <label for="lastName" class="form-label">Last Name</label>
+                                <input type="text" id="lastName" name="lastName" class="form-input" required>
+                            </div>
+                        </div>
+                        
+                        <div class="form-group">
+                            <label for="email" class="form-label">Email Address</label>
+                            <input type="email" id="email" name="email" class="form-input" required>
+                        </div>
+                        
+                        <div class="form-group">
+                            <label for="accessibility" class="form-label">Your Accessibility Needs</label>
+                            <select id="accessibility" name="accessibility" class="form-select" required>
+                                <option value="">Please select...</option>
+                                <option value="wheelchair">Wheelchair User</option>
+                                <option value="mobility-aid">Uses Mobility Aid (cane, walker, etc.)</option>
+                                <option value="visual">Visual Impairment</option>
+                                <option value="hearing">Hearing Impairment</option>
+                                <option value="cognitive">Cognitive Accessibility Needs</option>
+                                <option value="temporary">Temporary Mobility Limitation</option>
+                                <option value="none">No Specific Needs</option>
+                                <option value="other">Other (please specify in comments)</option>
+                            </select>
+                        </div>
+                        
+                        <div class="form-group">
+                            <label for="feedback" class="form-label">Your Feedback</label>
+                            <textarea 
+                                id="feedback" 
+                                name="feedback" 
+                                class="form-textarea" 
+                                rows="6" 
+                                placeholder="Please share your experience, suggestions, or any issues you encountered..."
+                                maxlength="1000"
+                                required
+                            ></textarea>
+                            <div class="char-counter" id="charCounter">0 / 1000 characters</div>
+                        </div>
+                        
+                        <div class="form-group">
+                            <label for="improvements" class="form-label">What would you like us to improve? (Optional)</label>
+                            <textarea 
+                                id="improvements" 
+                                name="improvements" 
+                                class="form-textarea" 
+                                rows="4" 
+                                placeholder="Any specific features or areas you'd like to see improved..."
+                                maxlength="500"
+                            ></textarea>
+                            <div class="char-counter" id="improvementsCounter">0 / 500 characters</div>
+                        </div>
+                        
+                        <div class="form-group">
+                            <label class="checkbox-item" style="align-items: flex-start; gap: var(--space-3);">
+                                <input type="checkbox" id="newsletter" name="newsletter" style="margin-top: var(--space-1);">
+                                <span style="font-size: var(--text-sm);">
+                                    I'd like to receive updates about AccessRide improvements and new features that affect accessibility. 
+                                    You can unsubscribe at any time.
+                                </span>
+                            </label>
+                        </div>
+                        
+                        <div style="text-align: center;">
+                            <button type="submit" class="btn btn-primary btn-lg">
+                                <i class="fas fa-paper-plane" aria-hidden="true"></i>
+                                Submit Feedback
+                            </button>
+                        </div>
+                    </form>
+                </div>
+            </div>
+        </section>
+
+        <!-- Recent Reviews Section -->
+        <section class="reviews-section" aria-labelledby="reviews-heading">
+            <div class="container">
+                <h2 id="reviews-heading" class="text-center mb-8">What Others Are Saying</h2>
+                
+                <div class="grid grid-cols-2 gap-6">
+                    <div class="review-card">
+                        <div class="review-header">
+                            <div class="reviewer-info">
+                                <div class="reviewer-avatar">S</div>
+                                <div class="reviewer-details">
+                                    <h4>Sarah M.</h4>
+                                    <p>Wheelchair user • Downtown area</p>
+                                </div>
+                            </div>
+                            <div class="review-rating">
+                                <i class="fas fa-star review-star" aria-hidden="true"></i>
+                                <i class="fas fa-star review-star" aria-hidden="true"></i>
+                                <i class="fas fa-star review-star" aria-hidden="true"></i>
+                                <i class="fas fa-star review-star" aria-hidden="true"></i>
+                                <i class="fas fa-star review-star" aria-hidden="true"></i>
+                            </div>
+                        </div>
+                        <p>"AccessRide has been a game-changer for my daily commute. The AI assistant understood my wheelchair accessibility needs perfectly and found routes I never knew existed. The real-time elevator status updates are incredibly helpful!"</p>
+                    </div>
+                    
+                    <div class="review-card">
+                        <div class="review-header">
+                            <div class="reviewer-info">
+                                <div class="reviewer-avatar">M</div>
+                                <div class="reviewer-details">
+                                    <h4>Marcus L.</h4>
+                                    <p>Visual impairment • University area</p>
+                                </div>
+                            </div>
+                            <div class="review-rating">
+                                <i class="fas fa-star review-star" aria-hidden="true"></i>
+                                <i class="fas fa-star review-star" aria-hidden="true"></i>
+                                <i class="fas fa-star review-star" aria-hidden="true"></i>
+                                <i class="fas fa-star review-star" aria-hidden="true"></i>
+                                <i class="far fa-star" style="color: var(--gray-300);" aria-hidden="true"></i>
+                            </div>
+                        </div>
+                        <p>"The voice interface works great with my screen reader. I love how detailed the audio directions are - they include tactile paving information and announce platforms clearly. Could use more audio landmarks though."</p>
+                    </div>
+                    
+                    <div class="review-card">
+                        <div class="review-header">
+                            <div class="reviewer-info">
+                                <div class="reviewer-avatar">A</div>
+                                <div class="reviewer-details">
+                                    <h4>Ana R.</h4>
+                                    <p>Mobility aid user • Suburban routes</p>
+                                </div>
+                            </div>
+                            <div class="review-rating">
+                                <i class="fas fa-star review-star" aria-hidden="true"></i>
+                                <i class="fas fa-star review-star" aria-hidden="true"></i>
+                                <i class="fas fa-star review-star" aria-hidden="true"></i>
+                                <i class="fas fa-star review-star" aria-hidden="true"></i>
+                                <i class="fas fa-star review-star" aria-hidden="true"></i>
+                            </div>
+                        </div>
+                        <p>"Finally, an app that understands accessibility isn't just about wheelchairs! It found me routes with minimal walking, highlighted stations with seating, and even suggested less crowded times to travel. Excellent work!"</p>
+                    </div>
+                    
+                    <div class="review-card">
+                        <div class="review-header">
+                            <div class="reviewer-info">
+                                <div class="reviewer-avatar">J</div>
+                                <div class="reviewer-details">
+                                    <h4>Jamie K.</h4>
+                                    <p>Caregiver • Airport routes</p>
+                                </div>
+                            </div>
+                            <div class="review-rating">
+                                <i class="fas fa-star review-star" aria-hidden="true"></i>
+                                <i class="fas fa-star review-star" aria-hidden="true"></i>
+                                <i class="fas fa-star review-star" aria-hidden="true"></i>
+                                <i class="fas fa-star review-star" aria-hidden="true"></i>
+                                <i class="far fa-star" style="color: var(--gray-300);" aria-hidden="true"></i>
+                            </div>
+                        </div>
+                        <p>"As a caregiver, this app helps me plan accessible trips for my clients efficiently. The detailed station information and accessibility features list is comprehensive. Would love to see more integration with ride-sharing services."</p>
+                    </div>
+                </div>
+            </div>
+        </section>
+    </main>
+
+    <!-- Footer -->
+    <footer class="footer" role="contentinfo">
+        <div class="container">
+            <div class="footer-content">
+                <div class="footer-section">
+                    <h3>AccessRide</h3>
+                    <p style="color: var(--gray-400);">
+                        Making accessible transport easier for everyone.
+                    </p>
+                </div>
+                
+                <div class="footer-section">
+                    <h3>Quick Links</h3>
+                    <ul class="footer-links">
+                        <li><a href="index.html">Home</a></li>
+                        <li><a href="chat.html">AI Assistant</a></li>
+                        <li><a href="map.html">Map View</a></li>
+                        <li><a href="profile.html">Profile</a></li>
+                    </ul>
+                </div>
+            </div>
+            
+            <div class="footer-bottom">
+                <p>&copy; 2024 AccessRide. All rights reserved.</p>
+            </div>
+        </div>
+    </footer>
+
+    <!-- JavaScript for Interactive Feedback -->
+    <script>
+        // Rating system
+        const ratings = {
+            overall: 0,
+            accessibility: 0,
+            ai: 0,
+            routes: 0
+        };
+        
+        const ratingTexts = {
+            1: "Poor",
+            2: "Fair", 
+            3: "Good",
+            4: "Very Good",
+            5: "Excellent"
+        };
+        
+        function setRating(category, value) {
+            ratings[category] = value;
+            
+            // Update visual stars
+            const starRating = document.querySelector(`[data-category="${category}"]`);
+            const stars = starRating.querySelectorAll('.star-button');
+            
+            stars.forEach((star, index) => {
+                if (index < value) {
+                    star.classList.add('active');
+                } else {
+                    star.classList.remove('active');
+                }
+            });
+            
+            // Update rating text
+            const textElement = document.getElementById(`${category}-text`);
+            textElement.textContent = `${value} star${value !== 1 ? 's' : ''} - ${ratingTexts[value]}`;
+        }
+        
+        // Quick feedback selection
+        let selectedQuickFeedback = null;
+        
+        function selectQuickFeedback(element) {
+            // Remove previous selection
+            document.querySelectorAll('.quick-feedback-item').forEach(item => {
+                item.classList.remove('selected');
+            });
+            
+            // Add selection to clicked item
+            element.classList.add('selected');
+            selectedQuickFeedback = element.dataset.type;
+            
+            // Auto-fill overall rating based on quick feedback
+            const ratingMap = {
+                'excellent': 5,
+                'good': 4,
+                'average': 3,
+                'poor': 2
+            };
+            
+            if (ratingMap[selectedQuickFeedback]) {
+                setRating('overall', ratingMap[selectedQuickFeedback]);
+            }
+        }
+        
+        // Character counter for textareas
+        function setupCharCounter(textareaId, counterId, maxLength) {
+            const textarea = document.getElementById(textareaId);
+            const counter = document.getElementById(counterId);
+            
+            textarea.addEventListener('input', function() {
+                const length = this.value.length;
+                counter.textContent = `${length} / ${maxLength} characters`;
+                
+                // Update counter styling based on length
+                counter.classList.remove('warning', 'error');
+                if (length > maxLength * 0.9) {
+                    counter.classList.add('warning');
+                }
+                if (length >= maxLength) {
+                    counter.classList.add('error');
+                }
+            });
+        }
+        
+        // Form submission
+        function handleFormSubmit(event) {
+            event.preventDefault();
+            
+            // Get form data
+            const formData = new FormData(event.target);
+            const feedback = {
+                quickFeedback: selectedQuickFeedback,
+                ratings: ratings,
+                formData: Object.fromEntries(formData)
+            };
+            
+            // Validate required fields
+            const requiredFields = ['firstName', 'lastName', 'email', 'accessibility', 'feedback'];
+            let isValid = true;
+            
+            requiredFields.forEach(field => {
+                const element = document.getElementById(field);
+                if (!element.value.trim()) {
+                    element.classList.add('error');
+                    isValid = false;
+                } else {
+                    element.classList.remove('error');
+                }
+            });
+            
+            if (!isValid) {
+                alert('Please fill in all required fields.');
+                return;
+            }
+            
+            // Show success message
+            document.getElementById('successMessage').classList.add('show');
+            
+            // Reset form
+            event.target.reset();
+            
+            // Reset ratings
+            Object.keys(ratings).forEach(category => {
+                ratings[category] = 0;
+                const stars = document.querySelectorAll(`[data-category="${category}"] .star-button`);
+                stars.forEach(star => star.classList.remove('active'));
+                document.getElementById(`${category}-text`).textContent = 'Click to rate';
+            });
+            
+            // Reset quick feedback
+            document.querySelectorAll('.quick-feedback-item').forEach(item => {
+                item.classList.remove('selected');
+            });
+            selectedQuickFeedback = null;
+            
+            // Reset character counters
+            document.getElementById('charCounter').textContent = '0 / 1000 characters';
+            document.getElementById('improvementsCounter').textContent = '0 / 500 characters';
+            
+            // Scroll to success message
+            document.getElementById('successMessage').scrollIntoView({ 
+                behavior: 'smooth', 
+                block: 'center' 
+            });
+            
+            // Hide success message after 5 seconds
+            setTimeout(() => {
+                document.getElementById('successMessage').classList.remove('show');
+            }, 5000);
+        }
+        
+        // Initialize when page loads
+        document.addEventListener('DOMContentLoaded', function() {
+            // Setup character counters
+            setupCharCounter('feedback', 'charCounter', 1000);
+            setupCharCounter('improvements', 'improvementsCounter', 500);
+            
+            // Setup form submission
+            document.getElementById('feedbackForm').addEventListener('submit', handleFormSubmit);
+            
+            // Keyboard navigation for stars
+            document.querySelectorAll('.star-button').forEach(star => {
+                star.addEventListener('keydown', function(e) {
+                    if (e.key === 'Enter' || e.key === ' ') {
+                        e.preventDefault();
+                        this.click();
+                    }
+                });
+            });
+            
+            // Auto-save ratings (for demo purposes)
+            window.addEventListener('beforeunload', function() {
+                if (Object.values(ratings).some(rating => rating > 0)) {
+                    localStorage.setItem('accessride-ratings', JSON.stringify(ratings));
+                }
+            });
+            
+            // Load saved ratings
+            const savedRatings = localStorage.getItem('accessride-ratings');
+            if (savedRatings) {
+                const parsed = JSON.parse(savedRatings);
+                Object.keys(parsed).forEach(category => {
+                    if (parsed[category] > 0) {
+                        setRating(category, parsed[category]);
+                    }
+                });
+            }
+        });
+    </script>
+</body>
+</html>

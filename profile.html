@@ -1,0 +1,1147 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="description" content="AccessRide Profile - Manage your preferences, saved routes, and travel history">
+    <title>Profile & History - AccessRide</title>
+    
+    <!-- Google Fonts -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=Poppins:wght@600;700&display=swap" rel="stylesheet">
+    
+    <!-- Styles -->
+    <link rel="stylesheet" href="styles.css">
+    
+    <!-- Icons -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    
+    <style>
+        .profile-header {
+            background: linear-gradient(135deg, var(--primary-blue) 0%, var(--primary-green) 100%);
+            color: var(--white);
+            padding: var(--space-12) 0;
+        }
+        
+        .profile-info {
+            display: flex;
+            align-items: center;
+            gap: var(--space-6);
+            margin-bottom: var(--space-6);
+        }
+        
+        .profile-avatar {
+            width: 96px;
+            height: 96px;
+            border-radius: var(--radius-full);
+            background: rgba(255, 255, 255, 0.2);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 2.5rem;
+            font-weight: var(--font-bold);
+            border: 4px solid rgba(255, 255, 255, 0.3);
+        }
+        
+        .profile-details h1 {
+            margin: 0 0 var(--space-2) 0;
+            font-size: var(--text-3xl);
+            color: var(--white);
+        }
+        
+        .profile-meta {
+            display: flex;
+            flex-wrap: wrap;
+            gap: var(--space-4);
+            font-size: var(--text-base);
+            opacity: 0.9;
+        }
+        
+        .profile-meta-item {
+            display: flex;
+            align-items: center;
+            gap: var(--space-2);
+        }
+        
+        .profile-stats {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(150px, 1fr));
+            gap: var(--space-4);
+        }
+        
+        .stat-card {
+            background: rgba(255, 255, 255, 0.1);
+            border-radius: var(--radius-xl);
+            padding: var(--space-4);
+            text-align: center;
+            backdrop-filter: blur(10px);
+        }
+        
+        .stat-number {
+            font-size: var(--text-2xl);
+            font-weight: var(--font-bold);
+            margin-bottom: var(--space-1);
+        }
+        
+        .stat-label {
+            font-size: var(--text-sm);
+            opacity: 0.9;
+        }
+        
+        .dashboard-section {
+            padding: var(--space-12) 0;
+        }
+        
+        .dashboard-tabs {
+            display: flex;
+            gap: var(--space-2);
+            margin-bottom: var(--space-8);
+            border-bottom: 2px solid var(--gray-200);
+            overflow-x: auto;
+        }
+        
+        .tab-button {
+            background: none;
+            border: none;
+            padding: var(--space-4) var(--space-6);
+            font-size: var(--text-base);
+            font-weight: var(--font-medium);
+            color: var(--gray-600);
+            border-bottom: 3px solid transparent;
+            cursor: pointer;
+            transition: all var(--transition-fast);
+            white-space: nowrap;
+        }
+        
+        .tab-button:hover {
+            color: var(--primary-blue);
+        }
+        
+        .tab-button.active {
+            color: var(--primary-blue);
+            border-bottom-color: var(--primary-blue);
+        }
+        
+        .tab-content {
+            display: none;
+        }
+        
+        .tab-content.active {
+            display: block;
+        }
+        
+        .route-item {
+            background: var(--white);
+            border: 1px solid var(--gray-200);
+            border-radius: var(--radius-xl);
+            padding: var(--space-6);
+            margin-bottom: var(--space-4);
+            transition: all var(--transition-fast);
+        }
+        
+        .route-item:hover {
+            border-color: var(--primary-blue);
+            box-shadow: var(--shadow-md);
+        }
+        
+        .route-header {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            margin-bottom: var(--space-4);
+        }
+        
+        .route-title {
+            font-size: var(--text-lg);
+            font-weight: var(--font-semibold);
+            color: var(--gray-900);
+            margin: 0;
+        }
+        
+        .route-actions {
+            display: flex;
+            gap: var(--space-2);
+        }
+        
+        .route-details-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(120px, 1fr));
+            gap: var(--space-4);
+            margin-bottom: var(--space-4);
+        }
+        
+        .route-detail {
+            text-align: center;
+        }
+        
+        .route-detail-label {
+            font-size: var(--text-xs);
+            color: var(--gray-600);
+            margin-bottom: var(--space-1);
+            text-transform: uppercase;
+            letter-spacing: 0.05em;
+        }
+        
+        .route-detail-value {
+            font-size: var(--text-base);
+            font-weight: var(--font-semibold);
+            color: var(--gray-900);
+        }
+        
+        .route-accessibility {
+            display: flex;
+            gap: var(--space-2);
+            flex-wrap: wrap;
+        }
+        
+        .accessibility-tag {
+            padding: var(--space-1) var(--space-3);
+            border-radius: var(--radius-full);
+            font-size: var(--text-xs);
+            font-weight: var(--font-medium);
+            background-color: var(--success);
+            color: var(--white);
+        }
+        
+        .destination-item {
+            background: var(--white);
+            border: 1px solid var(--gray-200);
+            border-radius: var(--radius-xl);
+            padding: var(--space-5);
+            margin-bottom: var(--space-4);
+            display: flex;
+            align-items: center;
+            gap: var(--space-4);
+            transition: all var(--transition-fast);
+        }
+        
+        .destination-item:hover {
+            border-color: var(--primary-blue);
+            box-shadow: var(--shadow-md);
+        }
+        
+        .destination-icon {
+            width: 48px;
+            height: 48px;
+            border-radius: var(--radius-lg);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: var(--text-xl);
+            color: var(--white);
+        }
+        
+        .destination-info {
+            flex: 1;
+        }
+        
+        .destination-name {
+            font-size: var(--text-lg);
+            font-weight: var(--font-semibold);
+            color: var(--gray-900);
+            margin: 0 0 var(--space-1) 0;
+        }
+        
+        .destination-address {
+            font-size: var(--text-sm);
+            color: var(--gray-600);
+            margin: 0 0 var(--space-2) 0;
+        }
+        
+        .destination-stats {
+            font-size: var(--text-xs);
+            color: var(--gray-500);
+            margin: 0;
+        }
+        
+        .feedback-item {
+            background: var(--white);
+            border: 1px solid var(--gray-200);
+            border-radius: var(--radius-xl);
+            padding: var(--space-6);
+            margin-bottom: var(--space-4);
+        }
+        
+        .feedback-header {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            margin-bottom: var(--space-4);
+        }
+        
+        .feedback-rating {
+            display: flex;
+            gap: var(--space-1);
+        }
+        
+        .feedback-star {
+            color: var(--accent-yellow);
+            font-size: var(--text-sm);
+        }
+        
+        .feedback-date {
+            font-size: var(--text-sm);
+            color: var(--gray-600);
+        }
+        
+        .settings-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+            gap: var(--space-6);
+        }
+        
+        .settings-card {
+            background: var(--white);
+            border: 1px solid var(--gray-200);
+            border-radius: var(--radius-xl);
+            padding: var(--space-6);
+        }
+        
+        .settings-card h3 {
+            margin: 0 0 var(--space-4) 0;
+            font-size: var(--text-xl);
+            color: var(--gray-900);
+        }
+        
+        .preference-item {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            padding: var(--space-3) 0;
+            border-bottom: 1px solid var(--gray-200);
+        }
+        
+        .preference-item:last-child {
+            border-bottom: none;
+        }
+        
+        .preference-label {
+            font-size: var(--text-base);
+            color: var(--gray-800);
+        }
+        
+        .toggle-switch {
+            position: relative;
+            display: inline-block;
+            width: 50px;
+            height: 24px;
+        }
+        
+        .toggle-switch input {
+            opacity: 0;
+            width: 0;
+            height: 0;
+        }
+        
+        .toggle-slider {
+            position: absolute;
+            cursor: pointer;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background-color: var(--gray-300);
+            transition: var(--transition-fast);
+            border-radius: 24px;
+        }
+        
+        .toggle-slider:before {
+            position: absolute;
+            content: "";
+            height: 18px;
+            width: 18px;
+            left: 3px;
+            bottom: 3px;
+            background-color: white;
+            transition: var(--transition-fast);
+            border-radius: 50%;
+        }
+        
+        input:checked + .toggle-slider {
+            background-color: var(--primary-blue);
+        }
+        
+        input:checked + .toggle-slider:before {
+            transform: translateX(26px);
+        }
+        
+        .empty-state {
+            text-align: center;
+            padding: var(--space-12) var(--space-6);
+            color: var(--gray-600);
+        }
+        
+        .empty-state-icon {
+            font-size: 4rem;
+            color: var(--gray-400);
+            margin-bottom: var(--space-4);
+        }
+        
+        .empty-state h3 {
+            margin: 0 0 var(--space-2) 0;
+            color: var(--gray-700);
+        }
+        
+        @media (max-width: 768px) {
+            .profile-info {
+                flex-direction: column;
+                text-align: center;
+                gap: var(--space-4);
+            }
+            
+            .profile-meta {
+                justify-content: center;
+            }
+            
+            .dashboard-tabs {
+                flex-wrap: wrap;
+            }
+            
+            .route-header {
+                flex-direction: column;
+                align-items: flex-start;
+                gap: var(--space-3);
+            }
+            
+            .route-actions {
+                width: 100%;
+                justify-content: flex-start;
+            }
+            
+            .destination-item {
+                flex-direction: column;
+                text-align: center;
+            }
+        }
+    </style>
+</head>
+<body>
+    <!-- Skip Link for Screen Readers -->
+    <a href="#main-content" class="skip-link">Skip to main content</a>
+    
+    <!-- Header -->
+    <header class="header" role="banner">
+        <div class="container">
+            <div class="header-content">
+                <a href="index.html" class="logo" aria-label="AccessRide - Home">
+                    <div class="logo-icon">
+                        <i class="fas fa-wheelchair" aria-hidden="true"></i>
+                    </div>
+                    <span>AccessRide</span>
+                </a>
+                
+                <nav class="nav" role="navigation" aria-label="Main navigation">
+                    <a href="index.html" class="nav-link">Home</a>
+                    <a href="map.html" class="nav-link">Map View</a>
+                    <a href="feedback.html" class="nav-link">Feedback</a>
+                    <a href="profile.html" class="nav-link active" aria-current="page">Profile</a>
+                </nav>
+            </div>
+        </div>
+    </header>
+
+    <!-- Main Content -->
+    <main id="main-content" role="main">
+        <!-- Profile Header -->
+        <section class="profile-header" role="banner">
+            <div class="container">
+                <div class="profile-info">
+                    <div class="profile-avatar">
+                        <i class="fas fa-user" aria-hidden="true"></i>
+                    </div>
+                    <div class="profile-details">
+                        <h1>Welcome back, Alex!</h1>
+                        <div class="profile-meta">
+                            <div class="profile-meta-item">
+                                <i class="fas fa-wheelchair" aria-hidden="true"></i>
+                                <span>Wheelchair User</span>
+                            </div>
+                            <div class="profile-meta-item">
+                                <i class="fas fa-map-marker-alt" aria-hidden="true"></i>
+                                <span>Downtown Seattle</span>
+                            </div>
+                            <div class="profile-meta-item">
+                                <i class="fas fa-calendar" aria-hidden="true"></i>
+                                <span>Member since March 2024</span>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                
+                <div class="profile-stats">
+                    <div class="stat-card">
+                        <div class="stat-number">127</div>
+                        <div class="stat-label">Routes Planned</div>
+                    </div>
+                    <div class="stat-card">
+                        <div class="stat-number">8</div>
+                        <div class="stat-label">Saved Routes</div>
+                    </div>
+                    <div class="stat-card">
+                        <div class="stat-number">15</div>
+                        <div class="stat-label">Destinations</div>
+                    </div>
+                    <div class="stat-card">
+                        <div class="stat-number">42</div>
+                        <div class="stat-label">Hours Saved</div>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- Dashboard Section -->
+        <section class="dashboard-section" aria-labelledby="dashboard-heading">
+            <div class="container">
+                <h2 id="dashboard-heading" class="sr-only">Your Dashboard</h2>
+                
+                <!-- Tabs Navigation -->
+                <div class="dashboard-tabs" role="tablist" aria-label="Dashboard sections">
+                    <button class="tab-button active" role="tab" aria-selected="true" aria-controls="saved-routes-panel" id="saved-routes-tab" onclick="switchTab('saved-routes')">
+                        <i class="fas fa-bookmark" aria-hidden="true"></i>
+                        Saved Routes
+                    </button>
+                    <button class="tab-button" role="tab" aria-selected="false" aria-controls="destinations-panel" id="destinations-tab" onclick="switchTab('destinations')">
+                        <i class="fas fa-map-pin" aria-hidden="true"></i>
+                        Destinations
+                    </button>
+                    <button class="tab-button" role="tab" aria-selected="false" aria-controls="history-panel" id="history-tab" onclick="switchTab('history')">
+                        <i class="fas fa-history" aria-hidden="true"></i>
+                        Travel History
+                    </button>
+                    <button class="tab-button" role="tab" aria-selected="false" aria-controls="feedback-panel" id="feedback-tab" onclick="switchTab('feedback')">
+                        <i class="fas fa-comment-alt" aria-hidden="true"></i>
+                        My Feedback
+                    </button>
+                    <button class="tab-button" role="tab" aria-selected="false" aria-controls="settings-panel" id="settings-tab" onclick="switchTab('settings')">
+                        <i class="fas fa-cog" aria-hidden="true"></i>
+                        Settings
+                    </button>
+                </div>
+
+                <!-- Saved Routes Tab -->
+                <div id="saved-routes-panel" class="tab-content active" role="tabpanel" aria-labelledby="saved-routes-tab">
+                    <h3 class="mb-6">Your Saved Routes</h3>
+                    
+                    <div class="route-item">
+                        <div class="route-header">
+                            <h4 class="route-title">Home to Downtown Office</h4>
+                            <div class="route-actions">
+                                <button class="btn btn-primary btn-sm">
+                                    <i class="fas fa-navigation" aria-hidden="true"></i>
+                                    Navigate
+                                </button>
+                                <button class="btn btn-outline btn-sm">
+                                    <i class="fas fa-edit" aria-hidden="true"></i>
+                                    Edit
+                                </button>
+                                <button class="btn btn-ghost btn-sm">
+                                    <i class="fas fa-trash" aria-hidden="true"></i>
+                                </button>
+                            </div>
+                        </div>
+                        
+                        <div class="route-details-grid">
+                            <div class="route-detail">
+                                <div class="route-detail-label">Duration</div>
+                                <div class="route-detail-value">35 min</div>
+                            </div>
+                            <div class="route-detail">
+                                <div class="route-detail-label">Transfers</div>
+                                <div class="route-detail-value">1</div>
+                            </div>
+                            <div class="route-detail">
+                                <div class="route-detail-label">Walking</div>
+                                <div class="route-detail-value">8 min</div>
+                            </div>
+                            <div class="route-detail">
+                                <div class="route-detail-label">Last Used</div>
+                                <div class="route-detail-value">Today</div>
+                            </div>
+                        </div>
+                        
+                        <div class="route-accessibility">
+                            <span class="accessibility-tag">
+                                <i class="fas fa-wheelchair" aria-hidden="true"></i>
+                                Wheelchair Accessible
+                            </span>
+                            <span class="accessibility-tag">
+                                <i class="fas fa-elevator" aria-hidden="true"></i>
+                                Elevator Available
+                            </span>
+                        </div>
+                    </div>
+                    
+                    <div class="route-item">
+                        <div class="route-header">
+                            <h4 class="route-title">Grocery Shopping Route</h4>
+                            <div class="route-actions">
+                                <button class="btn btn-primary btn-sm">
+                                    <i class="fas fa-navigation" aria-hidden="true"></i>
+                                    Navigate
+                                </button>
+                                <button class="btn btn-outline btn-sm">
+                                    <i class="fas fa-edit" aria-hidden="true"></i>
+                                    Edit
+                                </button>
+                                <button class="btn btn-ghost btn-sm">
+                                    <i class="fas fa-trash" aria-hidden="true"></i>
+                                </button>
+                            </div>
+                        </div>
+                        
+                        <div class="route-details-grid">
+                            <div class="route-detail">
+                                <div class="route-detail-label">Duration</div>
+                                <div class="route-detail-value">22 min</div>
+                            </div>
+                            <div class="route-detail">
+                                <div class="route-detail-label">Transfers</div>
+                                <div class="route-detail-value">0</div>
+                            </div>
+                            <div class="route-detail">
+                                <div class="route-detail-label">Walking</div>
+                                <div class="route-detail-value">5 min</div>
+                            </div>
+                            <div class="route-detail">
+                                <div class="route-detail-label">Last Used</div>
+                                <div class="route-detail-value">2 days ago</div>
+                            </div>
+                        </div>
+                        
+                        <div class="route-accessibility">
+                            <span class="accessibility-tag">
+                                <i class="fas fa-wheelchair" aria-hidden="true"></i>
+                                Wheelchair Accessible
+                            </span>
+                            <span class="accessibility-tag">
+                                <i class="fas fa-volume-up" aria-hidden="true"></i>
+                                Audio Announcements
+                            </span>
+                        </div>
+                    </div>
+                    
+                    <div class="route-item">
+                        <div class="route-header">
+                            <h4 class="route-title">Medical Appointment</h4>
+                            <div class="route-actions">
+                                <button class="btn btn-primary btn-sm">
+                                    <i class="fas fa-navigation" aria-hidden="true"></i>
+                                    Navigate
+                                </button>
+                                <button class="btn btn-outline btn-sm">
+                                    <i class="fas fa-edit" aria-hidden="true"></i>
+                                    Edit
+                                </button>
+                                <button class="btn btn-ghost btn-sm">
+                                    <i class="fas fa-trash" aria-hidden="true"></i>
+                                </button>
+                            </div>
+                        </div>
+                        
+                        <div class="route-details-grid">
+                            <div class="route-detail">
+                                <div class="route-detail-label">Duration</div>
+                                <div class="route-detail-value">45 min</div>
+                            </div>
+                            <div class="route-detail">
+                                <div class="route-detail-label">Transfers</div>
+                                <div class="route-detail-value">2</div>
+                            </div>
+                            <div class="route-detail">
+                                <div class="route-detail-label">Walking</div>
+                                <div class="route-detail-value">12 min</div>
+                            </div>
+                            <div class="route-detail">
+                                <div class="route-detail-label">Last Used</div>
+                                <div class="route-detail-value">1 week ago</div>
+                            </div>
+                        </div>
+                        
+                        <div class="route-accessibility">
+                            <span class="accessibility-tag">
+                                <i class="fas fa-wheelchair" aria-hidden="true"></i>
+                                Wheelchair Accessible
+                            </span>
+                            <span class="accessibility-tag">
+                                <i class="fas fa-elevator" aria-hidden="true"></i>
+                                Elevator Available
+                            </span>
+                            <span class="accessibility-tag">
+                                <i class="fas fa-braille" aria-hidden="true"></i>
+                                Braille Signage
+                            </span>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Frequent Destinations Tab -->
+                <div id="destinations-panel" class="tab-content" role="tabpanel" aria-labelledby="destinations-tab">
+                    <h3 class="mb-6">Frequent Destinations</h3>
+                    
+                    <div class="destination-item">
+                        <div class="destination-icon" style="background-color: var(--primary-blue);">
+                            <i class="fas fa-building" aria-hidden="true"></i>
+                        </div>
+                        <div class="destination-info">
+                            <h4 class="destination-name">Downtown Office</h4>
+                            <p class="destination-address">1234 5th Avenue, Seattle, WA 98101</p>
+                            <p class="destination-stats">Visited 47 times • Last visit: Today</p>
+                        </div>
+                        <div class="route-actions">
+                            <button class="btn btn-primary btn-sm">
+                                <i class="fas fa-route" aria-hidden="true"></i>
+                                Get Directions
+                            </button>
+                        </div>
+                    </div>
+                    
+                    <div class="destination-item">
+                        <div class="destination-icon" style="background-color: var(--primary-green);">
+                            <i class="fas fa-shopping-cart" aria-hidden="true"></i>
+                        </div>
+                        <div class="destination-info">
+                            <h4 class="destination-name">Westfield Shopping Center</h4>
+                            <p class="destination-address">400 Pine Street, Seattle, WA 98101</p>
+                            <p class="destination-stats">Visited 23 times • Last visit: 2 days ago</p>
+                        </div>
+                        <div class="route-actions">
+                            <button class="btn btn-primary btn-sm">
+                                <i class="fas fa-route" aria-hidden="true"></i>
+                                Get Directions
+                            </button>
+                        </div>
+                    </div>
+                    
+                    <div class="destination-item">
+                        <div class="destination-icon" style="background-color: var(--accent-orange);">
+                            <i class="fas fa-hospital" aria-hidden="true"></i>
+                        </div>
+                        <div class="destination-info">
+                            <h4 class="destination-name">Seattle Medical Center</h4>
+                            <p class="destination-address">1959 NE Pacific Street, Seattle, WA 98195</p>
+                            <p class="destination-stats">Visited 12 times • Last visit: 1 week ago</p>
+                        </div>
+                        <div class="route-actions">
+                            <button class="btn btn-primary btn-sm">
+                                <i class="fas fa-route" aria-hidden="true"></i>
+                                Get Directions
+                            </button>
+                        </div>
+                    </div>
+                    
+                    <div class="destination-item">
+                        <div class="destination-icon" style="background-color: var(--accent-yellow); color: var(--gray-900);">
+                            <i class="fas fa-utensils" aria-hidden="true"></i>
+                        </div>
+                        <div class="destination-info">
+                            <h4 class="destination-name">Pike Place Market</h4>
+                            <p class="destination-address">85 Pike Street, Seattle, WA 98101</p>
+                            <p class="destination-stats">Visited 8 times • Last visit: 3 days ago</p>
+                        </div>
+                        <div class="route-actions">
+                            <button class="btn btn-primary btn-sm">
+                                <i class="fas fa-route" aria-hidden="true"></i>
+                                Get Directions
+                            </button>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Travel History Tab -->
+                <div id="history-panel" class="tab-content" role="tabpanel" aria-labelledby="history-tab">
+                    <h3 class="mb-6">Recent Travel History</h3>
+                    
+                    <div class="route-item">
+                        <div class="route-header">
+                            <h4 class="route-title">Home → Downtown Office</h4>
+                            <div class="feedback-date">Today, 8:30 AM</div>
+                        </div>
+                        <div class="route-details-grid">
+                            <div class="route-detail">
+                                <div class="route-detail-label">Actual Duration</div>
+                                <div class="route-detail-value">37 min</div>
+                            </div>
+                            <div class="route-detail">
+                                <div class="route-detail-label">Mode</div>
+                                <div class="route-detail-value">Bus + Metro</div>
+                            </div>
+                            <div class="route-detail">
+                                <div class="route-detail-label">Status</div>
+                                <div class="route-detail-value" style="color: var(--success);">Completed</div>
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <div class="route-item">
+                        <div class="route-header">
+                            <h4 class="route-title">Downtown Office → Grocery Store</h4>
+                            <div class="feedback-date">Yesterday, 6:15 PM</div>
+                        </div>
+                        <div class="route-details-grid">
+                            <div class="route-detail">
+                                <div class="route-detail-label">Actual Duration</div>
+                                <div class="route-detail-value">25 min</div>
+                            </div>
+                            <div class="route-detail">
+                                <div class="route-detail-label">Mode</div>
+                                <div class="route-detail-value">Metro</div>
+                            </div>
+                            <div class="route-detail">
+                                <div class="route-detail-label">Status</div>
+                                <div class="route-detail-value" style="color: var(--success);">Completed</div>
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <div class="route-item">
+                        <div class="route-header">
+                            <h4 class="route-title">Home → Medical Center</h4>
+                            <div class="feedback-date">Last Tuesday, 2:00 PM</div>
+                        </div>
+                        <div class="route-details-grid">
+                            <div class="route-detail">
+                                <div class="route-detail-label">Actual Duration</div>
+                                <div class="route-detail-value">52 min</div>
+                            </div>
+                            <div class="route-detail">
+                                <div class="route-detail-label">Mode</div>
+                                <div class="route-detail-value">Bus + Light Rail</div>
+                            </div>
+                            <div class="route-detail">
+                                <div class="route-detail-label">Status</div>
+                                <div class="route-detail-value" style="color: var(--warning);">Delayed</div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- My Feedback Tab -->
+                <div id="feedback-panel" class="tab-content" role="tabpanel" aria-labelledby="feedback-tab">
+                    <h3 class="mb-6">Your Feedback History</h3>
+                    
+                    <div class="feedback-item">
+                        <div class="feedback-header">
+                            <div class="feedback-rating">
+                                <i class="fas fa-star feedback-star" aria-hidden="true"></i>
+                                <i class="fas fa-star feedback-star" aria-hidden="true"></i>
+                                <i class="fas fa-star feedback-star" aria-hidden="true"></i>
+                                <i class="fas fa-star feedback-star" aria-hidden="true"></i>
+                                <i class="fas fa-star feedback-star" aria-hidden="true"></i>
+                            </div>
+                            <div class="feedback-date">2 days ago</div>
+                        </div>
+                        <h4 style="margin: 0 0 var(--space-2) 0;">Excellent Experience with Downtown Route</h4>
+                        <p>"The AI assistant was incredibly helpful in finding accessible routes. The real-time elevator status updates saved me a lot of time and frustration. Keep up the great work!"</p>
+                    </div>
+                    
+                    <div class="feedback-item">
+                        <div class="feedback-header">
+                            <div class="feedback-rating">
+                                <i class="fas fa-star feedback-star" aria-hidden="true"></i>
+                                <i class="fas fa-star feedback-star" aria-hidden="true"></i>
+                                <i class="fas fa-star feedback-star" aria-hidden="true"></i>
+                                <i class="fas fa-star feedback-star" aria-hidden="true"></i>
+                                <i class="far fa-star" style="color: var(--gray-300);" aria-hidden="true"></i>
+                            </div>
+                            <div class="feedback-date">1 week ago</div>
+                        </div>
+                        <h4 style="margin: 0 0 var(--space-2) 0;">Good App, Minor Issues</h4>
+                        <p>"Love the accessibility features and the detailed station information. Would be great to have more integration with ride-sharing services for backup options."</p>
+                    </div>
+                    
+                    <div class="feedback-item">
+                        <div class="feedback-header">
+                            <div class="feedback-rating">
+                                <i class="fas fa-star feedback-star" aria-hidden="true"></i>
+                                <i class="fas fa-star feedback-star" aria-hidden="true"></i>
+                                <i class="fas fa-star feedback-star" aria-hidden="true"></i>
+                                <i class="fas fa-star feedback-star" aria-hidden="true"></i>
+                                <i class="fas fa-star feedback-star" aria-hidden="true"></i>
+                            </div>
+                            <div class="feedback-date">2 weeks ago</div>
+                        </div>
+                        <h4 style="margin: 0 0 var(--space-2) 0;">Game Changer for Accessibility</h4>
+                        <p>"This app has completely transformed how I navigate the city. The attention to accessibility details is outstanding. Thank you for making transportation more inclusive!"</p>
+                    </div>
+                </div>
+
+                <!-- Settings Tab -->
+                <div id="settings-panel" class="tab-content" role="tabpanel" aria-labelledby="settings-tab">
+                    <h3 class="mb-6">Profile Settings</h3>
+                    
+                    <div class="settings-grid">
+                        <div class="settings-card">
+                            <h3>Accessibility Preferences</h3>
+                            
+                            <div class="preference-item">
+                                <span class="preference-label">Wheelchair Accessible Routes Only</span>
+                                <label class="toggle-switch">
+                                    <input type="checkbox" checked>
+                                    <span class="toggle-slider"></span>
+                                </label>
+                            </div>
+                            
+                            <div class="preference-item">
+                                <span class="preference-label">Audio Announcements</span>
+                                <label class="toggle-switch">
+                                    <input type="checkbox" checked>
+                                    <span class="toggle-slider"></span>
+                                </label>
+                            </div>
+                            
+                            <div class="preference-item">
+                                <span class="preference-label">Elevator Priority</span>
+                                <label class="toggle-switch">
+                                    <input type="checkbox" checked>
+                                    <span class="toggle-slider"></span>
+                                </label>
+                            </div>
+                            
+                            <div class="preference-item">
+                                <span class="preference-label">Avoid Stairs</span>
+                                <label class="toggle-switch">
+                                    <input type="checkbox" checked>
+                                    <span class="toggle-slider"></span>
+                                </label>
+                            </div>
+                        </div>
+                        
+                        <div class="settings-card">
+                            <h3>Route Preferences</h3>
+                            
+                            <div class="preference-item">
+                                <span class="preference-label">Fastest Route Priority</span>
+                                <label class="toggle-switch">
+                                    <input type="checkbox">
+                                    <span class="toggle-slider"></span>
+                                </label>
+                            </div>
+                            
+                            <div class="preference-item">
+                                <span class="preference-label">Minimize Walking</span>
+                                <label class="toggle-switch">
+                                    <input type="checkbox" checked>
+                                    <span class="toggle-slider"></span>
+                                </label>
+                            </div>
+                            
+                            <div class="preference-item">
+                                <span class="preference-label">Avoid Crowded Times</span>
+                                <label class="toggle-switch">
+                                    <input type="checkbox">
+                                    <span class="toggle-slider"></span>
+                                </label>
+                            </div>
+                            
+                            <div class="preference-item">
+                                <span class="preference-label">Real-time Updates</span>
+                                <label class="toggle-switch">
+                                    <input type="checkbox" checked>
+                                    <span class="toggle-slider"></span>
+                                </label>
+                            </div>
+                        </div>
+                        
+                        <div class="settings-card">
+                            <h3>Notifications</h3>
+                            
+                            <div class="preference-item">
+                                <span class="preference-label">Route Alerts</span>
+                                <label class="toggle-switch">
+                                    <input type="checkbox" checked>
+                                    <span class="toggle-slider"></span>
+                                </label>
+                            </div>
+                            
+                            <div class="preference-item">
+                                <span class="preference-label">Service Disruptions</span>
+                                <label class="toggle-switch">
+                                    <input type="checkbox" checked>
+                                    <span class="toggle-slider"></span>
+                                </label>
+                            </div>
+                            
+                            <div class="preference-item">
+                                <span class="preference-label">Weekly Summary</span>
+                                <label class="toggle-switch">
+                                    <input type="checkbox">
+                                    <span class="toggle-slider"></span>
+                                </label>
+                            </div>
+                            
+                            <div class="preference-item">
+                                <span class="preference-label">Feature Updates</span>
+                                <label class="toggle-switch">
+                                    <input type="checkbox" checked>
+                                    <span class="toggle-slider"></span>
+                                </label>
+                            </div>
+                        </div>
+                        
+                        <div class="settings-card">
+                            <h3>Account</h3>
+                            
+                            <div class="form-group">
+                                <label for="profileName" class="form-label">Display Name</label>
+                                <input type="text" id="profileName" class="form-input" value="Alex Johnson">
+                            </div>
+                            
+                            <div class="form-group">
+                                <label for="profileEmail" class="form-label">Email Address</label>
+                                <input type="email" id="profileEmail" class="form-input" value="alex.johnson@email.com">
+                            </div>
+                            
+                            <div class="form-group">
+                                <label for="profileLocation" class="form-label">Default Location</label>
+                                <input type="text" id="profileLocation" class="form-input" value="Downtown Seattle, WA">
+                            </div>
+                            
+                            <button class="btn btn-primary" style="width: 100%;">
+                                <i class="fas fa-save" aria-hidden="true"></i>
+                                Save Changes
+                            </button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </section>
+    </main>
+
+    <!-- Footer -->
+    <footer class="footer" role="contentinfo">
+        <div class="container">
+            <div class="footer-content">
+                <div class="footer-section">
+                    <h3>AccessRide</h3>
+                    <p style="color: var(--gray-400);">
+                        Making accessible transport easier for everyone.
+                    </p>
+                </div>
+                
+                <div class="footer-section">
+                    <h3>Quick Links</h3>
+                    <ul class="footer-links">
+                        <li><a href="index.html">Home</a></li>
+                        <li><a href="chat.html">AI Assistant</a></li>
+                        <li><a href="map.html">Map View</a></li>
+                        <li><a href="feedback.html">Feedback</a></li>
+                    </ul>
+                </div>
+            </div>
+            
+            <div class="footer-bottom">
+                <p>&copy; 2024 AccessRide. All rights reserved.</p>
+            </div>
+        </div>
+    </footer>
+
+    <!-- JavaScript for Tab Functionality -->
+    <script>
+        function switchTab(tabName) {
+            // Hide all tab contents
+            document.querySelectorAll('.tab-content').forEach(content => {
+                content.classList.remove('active');
+            });
+            
+            // Remove active class from all tab buttons
+            document.querySelectorAll('.tab-button').forEach(button => {
+                button.classList.remove('active');
+                button.setAttribute('aria-selected', 'false');
+            });
+            
+            // Show selected tab content
+            document.getElementById(`${tabName}-panel`).classList.add('active');
+            
+            // Add active class to selected tab button
+            const activeButton = document.getElementById(`${tabName}-tab`);
+            activeButton.classList.add('active');
+            activeButton.setAttribute('aria-selected', 'true');
+        }
+        
+        // Initialize page
+        document.addEventListener('DOMContentLoaded', function() {
+            // Add keyboard navigation for tabs
+            document.querySelectorAll('.tab-button').forEach(button => {
+                button.addEventListener('keydown', function(e) {
+                    const tabs = Array.from(document.querySelectorAll('.tab-button'));
+                    const currentIndex = tabs.indexOf(this);
+                    let targetIndex;
+                    
+                    switch(e.key) {
+                        case 'ArrowRight':
+                        case 'ArrowDown':
+                            e.preventDefault();
+                            targetIndex = (currentIndex + 1) % tabs.length;
+                            tabs[targetIndex].focus();
+                            break;
+                        case 'ArrowLeft':
+                        case 'ArrowUp':
+                            e.preventDefault();
+                            targetIndex = currentIndex === 0 ? tabs.length - 1 : currentIndex - 1;
+                            tabs[targetIndex].focus();
+                            break;
+                        case 'Home':
+                            e.preventDefault();
+                            tabs[0].focus();
+                            break;
+                        case 'End':
+                            e.preventDefault();
+                            tabs[tabs.length - 1].focus();
+                            break;
+                    }
+                });
+            });
+            
+            // Auto-save settings changes
+            document.querySelectorAll('input[type="checkbox"]').forEach(checkbox => {
+                checkbox.addEventListener('change', function() {
+                    // In a real app, this would save to backend
+                    console.log(`Setting ${this.name || 'setting'} changed to ${this.checked}`);
+                });
+            });
+            
+            // Save profile changes
+            document.querySelector('.settings-card .btn-primary').addEventListener('click', function() {
+                // In a real app, this would save to backend
+                alert('Profile settings saved successfully!');
+            });
+            
+            // Add route interaction handlers
+            document.querySelectorAll('.route-item .btn').forEach(button => {
+                button.addEventListener('click', function(e) {
+                    e.preventDefault();
+                    const action = this.textContent.trim();
+                    const routeTitle = this.closest('.route-item').querySelector('.route-title').textContent;
+                    
+                    switch(action) {
+                        case 'Navigate':
+                            alert(`Starting navigation for: ${routeTitle}`);
+                            break;
+                        case 'Edit':
+                            alert(`Editing route: ${routeTitle}`);
+                            break;
+                        case 'Get Directions':
+                            alert(`Getting directions to: ${routeTitle}`);
+                            break;
+                        default:
+                            if (this.querySelector('.fa-trash')) {
+                                if (confirm(`Are you sure you want to delete the route: ${routeTitle}?`)) {
+                                    this.closest('.route-item, .destination-item').remove();
+                                }
+                            }
+                    }
+                });
+            });
+            
+            // Simulate live stats update
+            setTimeout(() => {
+                const routesPlanned = document.querySelector('.stat-card .stat-number');
+                if (routesPlanned && routesPlanned.textContent === '127') {
+                    routesPlanned.textContent = '128';
+                }
+            }, 5000);
+        });
+    </script>
+</body>
+</html>
